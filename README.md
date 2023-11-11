@@ -35,8 +35,8 @@ interface IParams {
 // state：表单数据（响应式）
 // resetState：重置表单
 // inputState：表格数据 转 表单数据
-// ouputState：表单数据 转 提交数据
-const { state, resetState, inputState, ouputState } = useDSP<IState, IParams, IFetch>({
+// outputState：表单数据 转 提交数据
+const { state, resetState, inputState, outputState } = useDSP<IState, IParams, IFetch>({
   name: {
     default: 's',
     input: 'is_name',
@@ -88,7 +88,7 @@ const handleInputState = () => {
 
 const handleOutputState = () => {
   // 获取请求提交数据
-  console.log(ouputState());
+  console.log(outputState());
   // {os_name: 'sunshine_lin', on_age: 1, on_id: '1-sunshine_lin-1', os_hobbies: '1,2'}
 };
 ```

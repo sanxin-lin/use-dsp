@@ -63,7 +63,7 @@ export const useDSP = <
     Object.assign(state, getInitState(currenMap))
   }
 
-  const ouputState = () => {
+  const outputState = () => {
     const params = Object.keys(state).reduce((pre, key) => {
       const stateKey = key as SK
       const option = outputMap[stateKey]
@@ -92,7 +92,7 @@ export const useDSP = <
     state,
     resetState,
     inputState,
-    ouputState,
+    outputState,
   }
 }
 
