@@ -1,60 +1,72 @@
-import type { TProps, TStrategy } from './types'
-import { cloneDeep } from 'lodash'
+import {
+  NO_INPUT_KEY,
+  type TInputStrategy,
+  type TOutputStrategy,
+  type TProps,
+  type TRequiredProps,
+} from './types'
+import { cloneDeep, isNil } from 'lodash'
 
-export const getInitState = <
-  S,
-  P,
-  D,
-  SK extends keyof S,
-  PK extends keyof P,
-  DK extends keyof D,
->(
-  map: TProps<S, P, D, SK, PK, DK>,
-) => {
+export const correctMap = <S, P, D>(
+  map: TProps<S, P, D>,
+): TRequiredProps<S, P, D> => {
+  const currentMap = cloneDeep(map)
+  Object.keys(currentMap).forEach((key) => {
+    const option = currentMap[key as keyof S]
+    if (isNil(option.input)) {
+      option.input = NO_INPUT_KEY
+    }
+    if (isNil(option.inputStrategy)) {
+      option.inputStrategy = (v) => v
+    }
+    if (isNil(option.outputStrategy)) {
+      option.outputStrategy = (v) => v
+    }
+  })
+  return currentMap as TRequiredProps<S, P, D>
+}
+
+export const getInitState = <S, P, D>(map: TRequiredProps<S, P, D>) => {
   const currentMap = cloneDeep(map)
   return Object.keys(currentMap).reduce((pre, key) => {
-    const currentKey = key as SK
+    const currentKey = key as keyof S
     const option = currentMap[currentKey]
     pre[currentKey] = option.default
     return pre
   }, {} as S)
 }
 
-export const getFieldMap = <
-  S,
-  P,
-  D,
-  SK extends keyof S,
-  PK extends keyof P,
-  DK extends keyof D,
->(
-  map: TProps<S, P, D, SK, PK, DK>,
-) => {
+export const getFieldMap = <S, P, D>(map: TRequiredProps<S, P, D>) => {
   const currentMap = cloneDeep(map)
-  const inputMap = {} as Record<
-    DK,
-    {
-      stateKey: SK
-      inputStrategy?: TStrategy
+  const inputMap = {} as {
+    [DK in keyof D]: {
+      stateKey: keyof S
+      inputStrategy?: TInputStrategy<D, D[DK]>
+    }[]
+  }
+  const outputMap = {} as {
+    [SK in keyof S]: {
+      outputKey: keyof P
+      outputStrategy?: TOutputStrategy<S, S[SK]>
     }
-  >
-  const outputMap = {} as Record<
-    SK,
-    {
-      outputKey: PK
-      ouputStrategy?: TStrategy
-    }
-  >
+  }
   Object.keys(currentMap).forEach((key) => {
-    const currentKey = key as SK
+    const currentKey = key as keyof S
     const option = currentMap[currentKey]
-    inputMap[option.input] = {
+    const input = option.input as keyof D
+    const output = option.output as keyof P
+    if (!inputMap[input]) {
+      inputMap[input] = []
+    }
+    inputMap[input].push({
       stateKey: currentKey,
       inputStrategy: option.inputStrategy,
-    }
-    outputMap[currentKey] = {
-      outputKey: option.output,
-      ouputStrategy: option.ouputStrategy,
+    })
+    if (!isNil(output)) {
+      outputMap[currentKey] = {
+        outputKey: output,
+        outputStrategy: option.outputStrategy,
+      }
     }
   })
   return {

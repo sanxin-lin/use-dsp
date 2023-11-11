@@ -1,6 +1,6 @@
 {
-  "name": "@sx/use-dsp",
-  "version": "1.0.0",
+  "name": "use-dsp",
+  "version": "1.0.1",
   "description": "transform data-state-parameter",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
@@ -35,5 +35,9 @@
     "transform data state parameter"
   ],
   "author": "sunshine_lin",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sanxin-lin/use-dsp.git"
+  }
 }
