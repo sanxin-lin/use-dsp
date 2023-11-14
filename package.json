@@ -1,6 +1,6 @@
 {
   "name": "use-dsp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "transform data-state-parameter",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",

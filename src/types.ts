@@ -4,12 +4,8 @@ export const NO_INPUT_KEY = Symbol('NO_INPUT_KEY')
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type TStrategy = keyof typeof strategys
-export type TInputStrategy<D, V = unknown> =
-  | TStrategy
-  | ((v: V, data: D) => any)
-export type TOutputStrategy<S, V = unknown> =
-  | TStrategy
-  | ((v: V, data: S) => any)
+export type TInputStrategy<D, V = any> = TStrategy | ((v: V, data: D) => any)
+export type TOutputStrategy<S, V = any> = TStrategy | ((v: V, data: S) => any)
 
 export interface IOption<
   S,
